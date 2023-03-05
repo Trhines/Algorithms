@@ -1,3 +1,7 @@
+//this sort uses creates a array of tupples form global array, (index, value)
+//uses the range of indexes in each array to choose which
+//indexes to update in the global array for rendering
+
 const updateArray = async(arr, low, high) => {
     let i = low
     let j = 0

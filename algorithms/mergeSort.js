@@ -2,7 +2,8 @@
 //uses the range of indexes in each array to choose which
 //indexes to update in the global array for rendering
 
-const updateArray = async(arr, low, high) => {
+const updateArray = async(arr) => {
+    let { high, low } = await findIdxRange(arr)
     let i = low
     let j = 0
     while(i < high+1){
@@ -10,7 +11,7 @@ const updateArray = async(arr, low, high) => {
         i++
         j++
     }
-    await slowRender(100)
+    await slowRender(20)
     return true
 }
 
@@ -29,25 +30,33 @@ const findIdxRange = async(arr) => {
 }
 
 
-const joinLists = async(arr, left, right, compare) => {
-    let i = 0
-    let j = 0
-    let k = 0
-
-    while(true){
-        if(await compare(left[i].n, right[j].n)){
-            arr[k] = left[i]
-            i++
-        }
-        else{
-            arr[k] = right[j]
-            j++
-        }
-        k++
-        if(i == left.length || j == right.length){
-            break
-        }
+const compareLoop = async(arr, left, right, i, j, k, compare) => {
+    if(await compare(left[i].n, right[j].n)){
+        arr[k] = left[i]
+        i++
     }
+    else{
+        arr[k] = right[j]
+        j++
+    }
+    k++
+    await updateArray(arr)
+    if(i == left.length || j == right.length){
+        return {arr, i, j, k}
+        }
+    else{
+        return compareLoop(arr, left, right, i, j, k, compare)
+    }
+
+}
+
+
+const joinLists = async(arr, left, right, compare) => {
+    var i = 0
+    var j = 0
+    var k = 0
+
+    var {arr, i, j, k} = await compareLoop(arr, left, right, i, j, k, compare)
 
     while(i < left.length){
         arr[k] = left[i]
@@ -59,8 +68,7 @@ const joinLists = async(arr, left, right, compare) => {
         j++
         k++
     }
-    let { high, low } = await findIdxRange(arr)
-    await updateArray(arr, low, high)
+    await updateArray(arr)
     return arr
 }
 

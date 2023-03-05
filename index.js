@@ -1,14 +1,11 @@
 let body = document.getElementById("body")
-let bubbleSort = document.getElementById("bubbleSort")
 let newArr = document.getElementById("newArray")
 let arrayContainer = document.getElementById("arrayContainer")
 let logBtn = document.getElementById('log')
 let fullWidth = window.innerWidth
 let fullHeight = parseInt(getComputedStyle(arrayContainer).height.split("p")[0])
 let globalArray = []
-let globalArrayLength = 100
-
-console.log(fullHeight)
+let globalArrayLength = 150
 
 const createArrayElement = (int) => {
     let el = document.createElement("div")
@@ -65,36 +62,6 @@ const swap = async(array, i, j) => {
     array[j] = temp
 }
 
-const innerLoop = async(array, length, n=0) => {
-    if (n === length){
-        return
-    }
-    else {
-        if(array[n] > array[n + 1]){
-            swap(array, n, n+1)
-            await slowRender(10)
-        }
-        n+=1
-        return innerLoop(array, length, n)
-    }
-}
-
-const outerLoop = async(array, length, n=0) => {
-    if (n === length){
-        return
-    }
-    else {
-        await innerLoop(array, length - n - 1)
-        n+=1
-        return outerLoop(array, length, n)
-    }
-}
-
-const bubble_sort = () =>{
-    outerLoop(globalArray, globalArray.length)
-}
-   
-
 newArr.addEventListener("click", initArray);
 logBtn.addEventListener("click", log)
-bubbleSort.addEventListener("click", bubble_sort)
+
